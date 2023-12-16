@@ -31,12 +31,10 @@ def get_product(id: int = Path(ge=1, le=2000)) -> Product:
 @productRouter.get("/Product", tags=['Get product by category'], response_model=Product,
                   status_code=200)
 # se cambia y se dice que es igual a Path(int)
-def get_product_by_category(category: str = Path(ge=1, le=2000)) -> Product:
-    result = ProductService(Session()).get_product_by_category(str)
+def get_product_by_category(category: str = Query(min_length=3, max_length=15)) -> List[Product]:
+    result = ProductService(Session()).get_product_by_category(category)
     if not result:
-        return JSONResponse(status_code=404, content={
-            "message": "Category not found"
-            })
+        return JSONResponse(status_code=404, content={"message": "Product not found"})
     return JSONResponse(status_code=200, content=jsonable_encoder(result))
 
 @productRouter.post("/Product", tags=['Create a product'], response_model=dict, status_code=201)
