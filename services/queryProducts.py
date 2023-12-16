@@ -12,6 +12,10 @@ class ProductService():
     def get_product(self, id:int):
         result = self.db.query(ProductModel).filter(ProductModel.id == id).first()
         return result
+    
+    def get_product_by_category(self, category:str):
+        result = self.db.query(ProductModel).filter(ProductModel.category == category).first()
+        return result
 
     def create_product(self, product:Product):
         new_product = ProductModel(**product.model_dump())

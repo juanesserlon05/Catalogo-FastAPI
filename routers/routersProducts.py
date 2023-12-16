@@ -11,13 +11,13 @@ from schemas.schemaProducts import Product
 productRouter = APIRouter()
 
 
-@productRouter.get("/Products", tags=['Read products'], response_model=List[Product],
+@productRouter.get("/Products", tags=['Get all products'], response_model=List[Product],
                   status_code=200)
 def get_products() -> List[Product]:
     result = ProductService(Session()).get_products()
     return JSONResponse(status_code=200, content=jsonable_encoder(result))
 
-@productRouter.get("/Products/{id}", tags=['Read product'], response_model=Product,
+@productRouter.get("/Product/{id}", tags=['Get product by ID'], response_model=Product,
                   status_code=200)
 # se cambia y se dice que es igual a Path(int)
 def get_product(id: int = Path(ge=1, le=2000)) -> Product:
@@ -28,13 +28,24 @@ def get_product(id: int = Path(ge=1, le=2000)) -> Product:
             })
     return JSONResponse(status_code=200, content=jsonable_encoder(result))
 
-@productRouter.post("/Products", tags=['Create a product'], response_model=dict, status_code=201)
+@productRouter.get("/Product", tags=['Get product by category'], response_model=Product,
+                  status_code=200)
+# se cambia y se dice que es igual a Path(int)
+def get_product_by_category(category: str = Path(ge=1, le=2000)) -> Product:
+    result = ProductService(Session()).get_product_by_category(str)
+    if not result:
+        return JSONResponse(status_code=404, content={
+            "message": "Category not found"
+            })
+    return JSONResponse(status_code=200, content=jsonable_encoder(result))
+
+@productRouter.post("/Product", tags=['Create a product'], response_model=dict, status_code=201)
 def create_product(product: Product) -> dict:
     ProductService(Session()).create_product(product)
     return JSONResponse(content={"message": "Product created successfully"}, status_code=201)
 
 
-@productRouter.put("/Products/{id}", tags=['Update product'], response_model=dict, status_code=200)
+@productRouter.put("/Product/{id}", tags=['Update product'], response_model=dict, status_code=200)
 def update_product(id: int, product: Product) -> dict:
     if not ProductService(Session()).get_product(id):
         return JSONResponse(content={"message": "Product not found"}, status_code=404)
@@ -42,7 +53,7 @@ def update_product(id: int, product: Product) -> dict:
     return JSONResponse(content={"message": "Product updated successfully"}, status_code=200)
 
 
-@productRouter.delete("/Products/{id}", tags=['Delete Products'], response_model=dict)
+@productRouter.delete("/Product/{id}", tags=['Delete Products'], response_model=dict)
 def delete_product(id: int) -> dict:
     if not ProductService(Session()).get_product(id):
         return JSONResponse(content={"message": "Product not found"}, status_code=404)
