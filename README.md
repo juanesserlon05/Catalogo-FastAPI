@@ -4,7 +4,7 @@ Esta es una API desarrollada en Python utilizando FastAPI y Virtual Environments
 
 Instalación
 Clona este repositorio en tu máquina local:
-git clone https://github.com/tu-usuario/tu-repositorio.git
+git clone https://github.com/juanesserlon05/Catalogo-FastAPI
 
 
 Accede al directorio del proyecto:
